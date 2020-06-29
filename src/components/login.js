@@ -1,7 +1,20 @@
 import React, { Component } from "react";
+import Axios from "axios";
+
 
 export default class Login extends Component {
+    
     render() {
+        
+        Axios({
+            method: "GET",
+            url: "http://localhost:5000/",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }).then(res => {
+            console.log(res.data.message);
+          });
         return (
             <form>
                 <h3>Sign In</h3>
@@ -23,7 +36,7 @@ export default class Login extends Component {
                     </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block">Submit</button>
+                <button type="submit" className="btn btn-success btn-block">Submit</button>
                 <p className="forgot-password text-right">
                     Forgot <a href="#">password?</a>
                 </p>
