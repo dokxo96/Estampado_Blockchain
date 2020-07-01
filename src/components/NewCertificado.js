@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
-import './App.css';
+import '../App.css';
 import Meme from '../abis/Meme.json'
+import logo from '../../src/assets/img/Sep-bgremove.png'
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 
@@ -71,117 +74,140 @@ class NewCertificado extends Component {
     console.log("Submitting file to ipfs...")
     ipfs.add(this.state.buffer, (error, result) => {
       console.log('Ipfs result', result)
-      const memeHash =result[0].hash
       if(error) {
         console.error(error)
         return
       }
-    
-
        this.state.contract.methods.set(result[0].hash).send({ from: this.state.account }).then((r) => {
          return this.setState({ memeHash: result[0].hash })
        })
-      document.getElementById('email').value="";
-      document.getElementById('name').value="";
-      document.getElementById('lastname').value="";
-      document.getElementById('phone').value="";
     })
   }
 
     render() {
         return (
-            <div>
-       
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 d-flex text-center">
-            
-              <div className="content mr-auto ml-auto"> 
-              <p>&nbsp;</p>
-              <h1>Información básica8</h1>
-              <p>&nbsp;</p>
-              <form>
-                    <div className="row">
-                      <div className="col">
-                        <input type="text" className="form-control" id="email" placeholder="Nombres" name="names"/>
-                      </div>
-                      <div className="col">
-                        <input type="text" className="form-control" placeholder="Apellidos" name="lastnames"/>
-                      </div>
-                    </div>
-
-              </form>
-              <p>&nbsp;</p>
-              <form>
-                    <div className="row">
-                      <div className="col">
-                        <input type="email" className="form-control" id="email" placeholder="Correo" name="email"/>
-                      </div>
-                      <div className="col">
-                        <input type="tel" className="form-control" placeholder="Telefono" name="phone"  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                          required/>
+          <div>
+                <nav className="navbar navbar-expand-lg   " id="mainNav">
+                    <div className="container">
+                        <div id="img-contenedor">
+                            <img src={logo} alt="" />
+                        </div>
+                      
+                        <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                            Menu
+                            <i className="fa fa-bars"></i>
+                        </button>
+                      <div className="collapse navbar-collapse" id="navbarResponsive">
+                        <ul className="navbar-nav text-uppercase ml-auto">
+                          <li className="nav-item">
+                            <a className="nav-link js-scroll-trigger" href="#">Solicitudes</a>
+                          </li>
+                          <li className="nav-item">
+                          <Link className="nav-link js-scroll-trigger" to={"/sign-in"} href="javascript:location.reload()" >Listado de Alumnos</Link>   
+                          </li>
+                          <li className="nav-item">
+                          <Link className=" nav-link js-scroll-trigger" to={"/"}href="javascript:location.reload()"  >Salir</Link>       
+                        </li>
+                        </ul>
                       </div>
                     </div>
+                </nav>
 
-              </form>
-             <p>&nbsp;</p>
-             <form>
-                    <div className="row">
-                      <div className="col">
-                        <input type="date" title="Fecha de nacimiento" className="form-control" id="d-Birthday" placeholder="Cumpleaños" name="email"/>
-                      </div>
-                      <div className="col">
-                        <input type="date" title="Fecha de egreso" className="form-control"  name="d-egressdate"  />
-                      </div>
+          
+                <header className="masthead2" >
+                    <div className="container">
+                        <div className="intro-text" >
+                        
+                               <div className="row">
+                                    <div className="col-12">
+                                      <div className="auth-wrapper">
+                                            <div className="auth-inner">
+                                               
+                                                  <form>
+                                                      <h1>Información básica</h1>
+
+                                                     <div className="row">
+                                                        <div className="col">
+                                                          <input type="text" className="form-control" id="email" placeholder="Nombres" name="names"/>
+                                                        </div>
+                                                        <div className="col">
+                                                          <input type="text" className="form-control" placeholder="Apellidos" name="lastnames"/>
+                                                        </div>
+                                                      </div>
+                                                      <p>&nbsp;</p>
+                                                     <div className="row">
+                                                      <div className="col">
+                                                        <input type="email" className="form-control" id="email" placeholder="Correo" name="email"/>
+                                                      </div>
+                                                      <div className="col">
+                                                        <input type="tel" className="form-control" placeholder="Telefono" name="phone"  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                                          required/>
+                                                      </div>
+                                                    </div>
+                                                     <p>&nbsp;</p>
+                                                     <div className="row">
+                                                          <div className="col">
+                                                            <select name="Institution" className="custom-select mb-3">
+                                                                  <option defaultValue>Institucion...</option>
+                                                                  <option value="volvo">ITT</option>
+                                                                  <option value="fiat">UAN</option>
+                                                                  <option value="audi">UT</option>
+                                                                </select>
+                                                          </div>
+                                                          <div className="col">
+                                                          <select name="Career" className="custom-select mb-3">
+                                                                  <option defaultValue>Carrera...</option>
+                                                                  <option value="IGE">Ingenieria en Gestion Empresarial</option>
+                                                                  <option value="IE">Ingenieria en Electrica</option>
+                                                                  <option value="ISC">Ingenieria en Sistemas Computacionales</option>
+                                                                  <option value="IC">Ingenieria Civil</option>
+                                                                  <option value="LA">Licenciatura en Arquitectura</option>
+                                                                  
+                                                                </select>
+                                                          </div>
+                                                        </div>
+                                                     <p>&nbsp;</p>
+                                                     <div className="row">
+                                                          <div className="col">
+                                                            <input type="date" title="Fecha de nacimiento" className="form-control" id="d-Birthday" placeholder="Cumpleaños" name="email"/>
+                                                          </div>
+                                                          
+                                                      </div>
+                                                      <p>&nbsp;</p>
+                                                      <div className="row">
+                                                         
+                                                           <div className="col">
+                                                            <input type="date" title="Fecha de egreso" className="form-control"  name="d-egressdate"  />
+                                                          </div>
+                                                      </div>
+                                                      <p>&nbsp;</p>
+                                                     <form onSubmit={this.onSubmit}> 
+                                                            <div className="row">
+                                                              <div className="col">
+                                                              <input type="file" accept=".jpg,.png" onChange={this.captureFile}/>
+                                                              </div>
+                                                              <div className="col">
+                                                              <p>&nbsp;</p>
+                                                              <input type="submit" />
+                                                              </div>
+                                                            </div>
+                                                        <img src={`https://ipfs.infura.io/ipfs/${this.state.memeHash}`} className="img-fluid"  />
+                                                      </form>
+
+                                                  </form>
+                                          
+                                            </div>
+                                        
+                                        </div>
+                                        
+                                    </div>
+                               </div>
+                           
+                        </div>
                     </div>
+                  </header>
 
-              </form>
-             <p>&nbsp;</p>
-             <form>
-                    <div className="row">
-                      <div className="col">
-                         <select name="Institution" className="custom-select mb-3">
-                              <option defaultValue>Institucion...</option>
-                              <option value="volvo">ITT</option>
-                              <option value="fiat">UAN</option>
-                              <option value="audi">UT</option>
-                            </select>
-                      </div>
-                      <div className="col">
-                      <select name="Career" className="custom-select mb-3">
-                              <option defaultValue>Carrera...</option>
-                              <option value="IGE">Ingenieria en Gestion Empresarial</option>
-                              <option value="IE">Ingenieria en Electrica</option>
-                              <option value="ISC">Ingenieria en Sistemas Computacionales</option>
-                              <option value="IC">Ingenieria Civil</option>
-                              <option value="LA">Licenciatura en Arquitectura</option>
-                              
-                            </select>
-                      </div>
-                    </div>
-
-              </form>
-             <p>&nbsp;</p>
-                  
-              <form onSubmit={this.onSubmit}> 
-                    <div className="row">
-                      <div className="col">
-                      <input type="file" accept=".jpg,.png" onChange={this.captureFile}/>
-                      </div>
-                      <div className="col">
-                      <input type="submit" />
-                      </div>
-                     </div>
-                <img src={`https://ipfs.infura.io/ipfs/${this.state.ipfsHash}`} className="img-fluid"  />
-              </form>
-
-               
-             </div>
-               
-            </main>
-          </div>
-        </div>
-      </div>
+         </div>
         );
     }
 }export default  NewCertificado
