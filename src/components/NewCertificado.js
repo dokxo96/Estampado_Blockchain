@@ -39,8 +39,8 @@ class NewCertificado extends Component {
     if(networkData) {
       const contract = web3.eth.Contract(Meme.abi, networkData.address)
       this.setState({ contract })
-      const memeHash = await contract.methods.get().call()
-      this.setState({ memeHash })
+      const Hash = await contract.methods.get().call()
+      this.setState({ Hash })
     } else {
       window.alert('Smart contract not deployed to detected network.')
     }
@@ -50,7 +50,7 @@ class NewCertificado extends Component {
     super(props)
 
     this.state = {
-      memeHash: '',
+      Hash: '',
       contract: null,
       web3: null,
       buffer: null,
@@ -79,7 +79,7 @@ class NewCertificado extends Component {
         return
       }
        this.state.contract.methods.set(result[0].hash).send({ from: this.state.account }).then((r) => {
-         return this.setState({ memeHash: result[0].hash })
+         return this.setState({ Hash: result[0].hash })
        })
     })
   }
@@ -87,11 +87,9 @@ class NewCertificado extends Component {
     render() {
         return (
           <div>
-                <nav className="navbar navbar-expand-lg   " id="mainNav">
+            {/**    <nav className="navbar navbar-expand-lg   " id="mainNav">
                     <div className="container">
-                        <div id="img-contenedor">
-                            <img src={logo} alt="" />
-                        </div>
+                    <img className="mediana" src={logo} alt="" />
                       
                         <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                             Menu
@@ -112,7 +110,7 @@ class NewCertificado extends Component {
                       </div>
                     </div>
                 </nav>
-
+*/} 
           
                 <header className="masthead2" >
                     <div className="container">
@@ -124,11 +122,11 @@ class NewCertificado extends Component {
                                             <div className="auth-inner">
                                                
                                                   <form>
-                                                      <h1>Información básica</h1>
+                                                      <h3>Información básica</h3>
 
                                                      <div className="row">
                                                         <div className="col">
-                                                          <input type="text" className="form-control" id="email" placeholder="Nombres" name="names"/>
+                                                          <input type="text" className="form-control" id="name" placeholder="Nombres" name="names"/>
                                                         </div>
                                                         <div className="col">
                                                           <input type="text" className="form-control" placeholder="Apellidos" name="lastnames"/>
@@ -191,7 +189,7 @@ class NewCertificado extends Component {
                                                               <input type="submit" />
                                                               </div>
                                                             </div>
-                                                        <img src={`https://ipfs.infura.io/ipfs/${this.state.memeHash}`} className="img-fluid"  />
+                                                        <img src={`https://ipfs.infura.io/ipfs/${this.state.hash}`} className="img-fluid"  />
                                                       </form>
 
                                                   </form>
@@ -207,6 +205,41 @@ class NewCertificado extends Component {
                     </div>
                   </header>
 
+                  <footer className="footer">
+                      <div className="container">
+                        <div className="row align-items-center">
+                          <div className="col-md-4">
+                            <span className="copyright">Copyright &copy; Your Website 2019</span>
+                          </div>
+                          <div className="col-md-4">
+                            <ul style={{"-webkit-text-stroke":"px black"}} className="list-inline social-buttons">
+                              <li className="list-inline-item">
+                                <a href="#something">
+                                  <i style={{"-webkit-text-stroke":".0px black"}} className="fa fa-twitter"></i>
+                                </a>
+                              </li>
+                              <li className="list-inline-item">
+                                <a href="#something">
+                                  <i style={{"-webkit-text-stroke":"0px black"}} className="fa fa-facebook-f"></i>
+                                </a>
+                              </li>
+                            
+                            </ul>
+                          </div>
+                          <div className="col-md-4">
+                            <ul className="list-inline quicklinks">
+                              <li className="list-inline-item">
+                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}} href="#something">Privacy Policy</a>
+                              </li>
+                              <li className="list-inline-item">
+                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}}  href="#something">Terms of Use</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                   </footer>
+           
          </div>
         );
     }

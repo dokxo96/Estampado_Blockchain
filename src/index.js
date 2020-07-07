@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
+import AuthProvider from './Context/AuthContext'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import App from './App';
@@ -10,9 +11,11 @@ import './assets/css/agency.min.css'
 
 
 ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>,
+    <AuthProvider>
+        
+             <App />
+       
+    </AuthProvider>,
     document.getElementById("root")
 );
 // If you want your app to work offline and load faster, you can change
