@@ -212,15 +212,15 @@ class NewCertificado extends Component {
                             <span className="copyright">Copyright &copy; Your Website 2019</span>
                           </div>
                           <div className="col-md-4">
-                            <ul style={{"-webkit-text-stroke":"px black"}} className="list-inline social-buttons">
+                            <ul style={{"WebkitTextStroke":"px black"}} className="list-inline social-buttons">
                               <li className="list-inline-item">
                                 <a href="#something">
-                                  <i style={{"-webkit-text-stroke":".0px black"}} className="fa fa-twitter"></i>
+                                  <i style={{"WebkitTextStroke":".0px black"}} className="fa fa-twitter"></i>
                                 </a>
                               </li>
                               <li className="list-inline-item">
                                 <a href="#something">
-                                  <i style={{"-webkit-text-stroke":"0px black"}} className="fa fa-facebook-f"></i>
+                                  <i style={{"WebkitTextStroke":"0px black"}} className="fa fa-facebook-f"></i>
                                 </a>
                               </li>
                             
@@ -229,10 +229,10 @@ class NewCertificado extends Component {
                           <div className="col-md-4">
                             <ul className="list-inline quicklinks">
                               <li className="list-inline-item">
-                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}} href="#something">Privacy Policy</a>
+                                <a style={{"WebkitTextStroke":"0px black","color":"#080808"}} href="#something">Privacy Policy</a>
                               </li>
                               <li className="list-inline-item">
-                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}}  href="#something">Terms of Use</a>
+                                <a style={{"WebkitTextStroke":"0px black","color":"#080808"}}  href="#something">Terms of Use</a>
                               </li>
                             </ul>
                           </div>

@@ -8,6 +8,8 @@ import Mainpage from './components/MainPage'
 import Newcert from './components/NewCertificado'
 import Login from './components/Login'
 import PrivateRoute from './hocs/PrivateRoute';
+import Home from './components/Home'
+import regAd from './components/reg_Admins'
 import UnPrivateRoute from './hocs/UnPrivateRoute';
 
 import Navbar from  './components/Navbar'
@@ -18,12 +20,14 @@ function App() {
   return (
     <Router>
       <Navbar/>
-     
-         <Route exact path="/" component={Mainpage}/>   
-          <Route  path="/newCert" component={Newcert}/>
-          <Route  path="/login"  component={Login}/>
-         
-     
+         {/** Ruta principal y libre */}
+         <Route exact path="/" component={Mainpage}/>  
+          {/** Ruta para users y admins */}
+         <PrivateRoute path="/home"  roles={['admin','user','SU']} component={Home}/>
+         {/** Ruta para los Admins */}
+         <PrivateRoute path="/newCert" roles={['admin']} component={Newcert}/>
+         {/** Ruta para El SuperUser */}
+         <PrivateRoute path="/regAdmins"  roles={['SU']} component={regAd}/>
     </Router>
     
   );

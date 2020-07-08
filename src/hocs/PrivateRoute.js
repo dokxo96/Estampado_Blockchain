@@ -11,7 +11,7 @@ const PrivateRoute = ({component : Component, roles, ...rest})=>{
                                        state : {from : props.location}}}/>
             
             if(!roles.includes(user.role))
-                return <Redirect to={{ pathname: '/', 
+                return <Redirect to={{ pathname: '/home', 
                                  state : {from : props.location}}}/>
             return <Component {...props}/>
         }}/>

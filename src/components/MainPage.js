@@ -1,42 +1,35 @@
-import React, { useState,useRef,useEffect } from 'react';
+import React, { useState,useContext,useEffect } from 'react';
 import AuthService from '../Services/AuthService';
 import Message from '../components/Message';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import '../../src/App.css';
-
+import {AuthContext} from '../Context/AuthContext';
 
 const MainPage = props => {
-  const [user,setUser] = useState({firstname:"",lastname:"",username: "", password : "",role:""});
-  const [message,setMessage] = useState(null);
-  let timerID = useRef(null);
+  const [user,setUser] =useState({username:"",password:""});
+    const [message,setMessage]=useState(null);
+    const authContext =useContext(AuthContext);
 
-  useEffect(()=>{
-      return ()=>{
-          clearTimeout(timerID);
-      }
-  },[]);
+    const onChange = e =>{
+        e.preventDefault();
+        setUser({...user,[e.target.name]: e.target.value });
+        console.log(user)
+    }
 
-  const onChange = e =>{
-      setUser({...user,[e.target.name] : e.target.value});
-  }
-
-  const resetForm = ()=>{
-      setUser({firstname:"",lastname:"",username : "", password : "",role:""});
-  }
-
-  const onSubmit = e =>{
-      e.preventDefault();
-      AuthService.register(user).then(data=>{
-          const { message } = data;
-          setMessage(message);
-          resetForm();
-          if(!message.msgError){
-              timerID = setTimeout(()=>{
-                  props.history.push('/login');
-              },2000)
-          }
-      });
-  }
+    const onSubmit = e =>{
+        e.preventDefault();
+        AuthService.login(user).then(data=>{
+            console.log(data);
+            const { isAuthenticated,user,message} = data;
+            if(isAuthenticated){
+                authContext.setUser(user);
+                authContext.setIsAuthenticated(isAuthenticated);
+                props.history.push('/home');
+            }
+            else
+                setMessage(message);
+        });
+    }
 
 
 
@@ -55,11 +48,52 @@ const MainPage = props => {
                           ESTAMPADO DE CERTIFICADOS EN BLOCKCHAIN
                         </h1>
                     </div>
-                
+                <div>
+                  <p>&nbsp;</p>
+                  <p>&nbsp;</p>
+                  <p>&nbsp;</p>
+                  
+                </div>
                 </div>   
             </div>
-        
-            <div className="col-6">
+              <div className="col-6">
+              <div className="auth-wrapper">
+                      <div className="auth-inner">
+                      <form onSubmit={onSubmit}>
+                                               <h2 style={{"WebkitTextStroke":".5px black"}} className="text-center " >Entrar</h2>
+                                               < p>&nbsp;</p>
+                                               <label htmlFor="username" className="sr-only">Usuario: </label>
+                                                        <input type="text" 
+                                                            name="username" 
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Usuario:"/>
+                                                             <p>&nbsp;</p>
+                                                        <label htmlFor="password" className="sr-only">Contraseña: </label>
+                                                        <input type="password" 
+                                                            name="password" 
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Contraseña:"/>
+                                                             <p>&nbsp;</p>
+                                                        <button className="btn btn-lg btn-success btn-block" 
+                                                                type="submit">Entrar </button>
+                                                                 
+                                                          <a  style={{"WebkitTextStroke":"0px black"}} className="lo"href="#">¿Olvidaste la contraseña?</a>
+                                                          <p>&nbsp;</p>
+                                                        
+
+
+                                                  </form>
+                                               {message ? <Message message = {message}/> :null} 
+                                                 
+                                          
+                      </div>
+                  
+                  </div>
+                  
+              </div>
+           {/**  <div className="col-6">
             <div className="auth-wrapper">
                     <div className="auth-inner">
                           <form onSubmit={onSubmit}>
@@ -71,6 +105,7 @@ const MainPage = props => {
                                     onChange={onChange} 
                                     className="form-control" 
                                     placeholder="Nombres:"/>
+                                     <p>&nbsp;</p>
                               <label htmlFor="lastname" className="sr-only">Apellidos: </label>
                               <input type="text" 
                                     name="lastname" 
@@ -78,6 +113,7 @@ const MainPage = props => {
                                     onChange={onChange} 
                                     className="form-control" 
                                     placeholder="Apellidos:"/>
+                                     <p>&nbsp;</p>
                               <label htmlFor="username" className="sr-only">Username: </label>
                               <input type="text" 
                                     name="username" 
@@ -85,6 +121,7 @@ const MainPage = props => {
                                     onChange={onChange} 
                                     className="form-control" 
                                     placeholder="Usuario/correo"/>
+                                     <p>&nbsp;</p>
                               <label htmlFor="password" className="sr-only">Password: </label>
                               <input type="password" 
                                     name="password"
@@ -92,6 +129,7 @@ const MainPage = props => {
                                     onChange={onChange} 
                                     className="form-control" 
                                     placeholder="Conrtaseña"/>
+                                     <p>&nbsp;</p>
                               <label htmlFor="role" className="sr-only">Role: </label>
                               <input type="text" 
                                     name="role"
@@ -99,7 +137,8 @@ const MainPage = props => {
                                     onChange={onChange} 
                                     className="form-control" 
                                     placeholder="Enter role (admin/user)"/>
-                              <button className="btn btn-lg btn-primary btn-block" 
+                                     <p>&nbsp;</p>
+                              <button className="btn btn-lg btn-success btn-block" 
                                       type="submit">Registrarse</button>
                               <a 
                                       className="lo" 
@@ -114,7 +153,7 @@ const MainPage = props => {
                 </div>
                 
             </div>
-        </div>
+        */}</div>
           </Router>
         </div>
         </div>

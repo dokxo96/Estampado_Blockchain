@@ -3,7 +3,7 @@ import AuthService  from '../Services/AuthService';
 import Message from '../components/Message';
 import {AuthContext} from '../Context/AuthContext';
 import '../App.css';
-
+import {Link} from 'react-router-dom';
 
 const Login = props =>{
     const [user,setUser] =useState({username:"",password:""});
@@ -24,7 +24,7 @@ const Login = props =>{
             if(isAuthenticated){
                 authContext.setUser(user);
                 authContext.setIsAuthenticated(isAuthenticated);
-                props.history.push('/newCert');
+                props.history.push('/home');
             }
             else
                 setMessage(message);
@@ -39,7 +39,8 @@ const Login = props =>{
                                  <div className="row">
                                       <div className="col-12">
                                         <div className="auth-wrapper">
-                                              <div className="auth-inner">
+                                            
+                                              <div className="auth-inner"> 
                                               <form onSubmit={onSubmit}>
                                                <h2 style={{"WebkitTextStroke":".5px black"}} className="text-center " >Entrar</h2>
                                                < p>&nbsp;</p>
@@ -49,19 +50,28 @@ const Login = props =>{
                                                             onChange={onChange} 
                                                             className="form-control" 
                                                             placeholder="Enter Username"/>
+                                                             <p>&nbsp;</p>
                                                         <label htmlFor="password" className="sr-only">Password: </label>
                                                         <input type="password" 
                                                             name="password" 
                                                             onChange={onChange} 
                                                             className="form-control" 
                                                             placeholder="Enter Password"/>
+                                                             <p>&nbsp;</p>
                                                         <button className="btn btn-lg btn-success btn-block" 
                                                                 type="submit">Log in </button>
+                                                                 
                                                           <a  style={{"WebkitTextStroke":"0px black"}} className="lo"href="#">¿Olvidaste la contraseña?</a>
-                                                          <a  style={{"WebkitTextStroke":"0px black"}} className="lo"href="#">¿No estas registrado?,entra aquí!</a>
-                                                      
+                                                          <p>&nbsp;</p>
+                                                          <Link to='/'>
+                                                                <a style={{"WebkitTextStroke":"0px black"}} className="lo">¿No estas registrado?, click aquí!</a>     
+                                                          </Link>
+                                                          
+
+
                                                   </form>
-                                                  {message ? <Message message = {message}/> :null}
+                                               {message ? <Message message = {message}/> :null} 
+                                                 
                                           
                                                  
                                                

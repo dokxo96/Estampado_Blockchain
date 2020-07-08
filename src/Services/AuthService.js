@@ -31,6 +31,34 @@ export default {
             console.log(err)
             });
     },
+    Adminregister : user =>{
+        console.log(user);
+        return fetch('/user/registerAdmins',{
+            method : "post",
+            body : JSON.stringify(user),
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        }).then(res => res.json())
+          .then(data => data)
+          .catch((err) => {
+            console.log(err)
+            });
+    },
+    Certregister : user =>{
+        console.log(user);
+        return fetch('/user/certregister',{
+            method : "post",
+            body : JSON.stringify(user),
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        }).then(res => res.json())
+          .then(data => data)
+          .catch((err) => {
+            console.log(err)
+            });
+    },
     logout : ()=>{
         return fetch('/user/logout')
                 .then(res => res.json())

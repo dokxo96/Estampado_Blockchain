@@ -14,6 +14,7 @@ const Navbar = props =>{
           if(data.success){
             setUser(data.user);
             setIsAuthenticated(false);
+            
           }
         })
       }
@@ -21,26 +22,15 @@ const Navbar = props =>{
         return(
           <>
            <Link to='/'>
-              <li style={{ color: 'white' }}  className="nav-item nav-link js-scroll-trigger">
-                   Inicio 
-              </li>     
+              <h6 style={{"WebkitTextStroke":"0px black"}}className="nav-item nav-link ">Inicio</h6>    
           </Link>
           <Link to='#blockchain'>
-              <li  style={{ color: 'white' }}className="nav-item nav-link js-scroll-trigger">
-                   Blockchain 
-              </li>     
+               <h6 style={{"WebkitTextStroke":"0px black"}} className="nav-item nav-link ">Blockchain</h6>
           </Link>
           <Link to='#ventajas'>
-              <li style={{ color: 'white' }} className="nav-item nav-link js-scroll-trigger">
-                   Ventajas 
-              </li>     
+                <h6 style={{"WebkitTextStroke":"0px black"}}className="nav-item nav-link ">Ventajas</h6> 
           </Link>
          
-          <Link to='/login'>
-              <li style={{ color: 'white' }} className="nav-item nav-link js-scroll-trigger">
-                   Entrar 
-              </li>     
-          </Link>
           
           </>
         )
@@ -49,33 +39,50 @@ const Navbar = props =>{
         return(
           <>
          
-                  <Link to='/solicitudes'>
-                      <li style={{ color: 'white' }} className="nav-item nav-link js-scroll-trigger">
-                          Solicitudes 
-                      </li>     
+                  <Link to='/MiInfor'>
+                        <h6 style={{"WebkitTextStroke":"0px black"}}className="nav-item nav-link ">Mi información</h6>     
                   </Link>
-                  <Link to='/certificados'>
-                      <li style={{ color: 'white' }} className="nav-item nav-link js-scroll-trigger">
-                          Certificados 
-                      </li>     
-                  </Link>
-                  
                   {
-                    user.rol==="admin" ?
-                    <Link to='/regnewCert'>
-                      <li style={{ color: 'white' }} className="nav-item nav-link js-scroll-trigger">
-                          Salir 
-                      </li>     
+                    user.role==="user" ?
+                    <Link to='/Mititulo'>
+                       <h6 style={{"WebkitTextStroke":"0px black"}}  className="nav-item nav-link ">Ver titulo</h6>     
+   
                     </Link>:null
                   }
-                  <button type="button" className="btn btn-link nav-item nav-link js-scroll-trigger" onClick={onClickLogoutHandler} >Salir</button>
-          
+                 
+                  {
+                    user.role==="admin" ?
+                    <Link to='/Certs'>
+                       <h6 style={{"WebkitTextStroke":"0px black"}}  className="nav-item nav-link ">Certificados</h6>     
+   
+                    </Link>:null
+                  }
+                  {
+                    user.role==="admin" ?
+                    <Link to='/newCert'>
+                       <h6 style={{"WebkitTextStroke":"0px black"}}  className="nav-item nav-link ">Registrar certficado</h6>     
+   
+                    </Link>:null
+                  }
+                   {
+                    user.role==="SU" ?
+                    <Link to='/regAdmins'>
+                       <h6 style={{"WebkitTextStroke":"0px black"}}  className="nav-item nav-link ">Adminstradores</h6>     
+   
+                    </Link>:null
+                  }
+                  <Link to='/login'>
+                        <h6 style={{"WebkitTextStroke":"0px black"}} onClick={onClickLogoutHandler} className="nav-item nav-link ">Salir</h6>     
+                  </Link>
+             
           </>
         )
       }
 
-      
+
       return(
+
+      
         <nav className="navbar navbar-expand-lg   " id="mainNav">
               <div className="container">
                 <Link to='/'>
