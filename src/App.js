@@ -6,7 +6,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Mainpage from './components/MainPage'
 import Newcert from './components/NewCertificado'
-import Login from './components/Login'
+import Newcert2 from './components/NewCertificado copy'
+
 import PrivateRoute from './hocs/PrivateRoute';
 import Home from './components/Home'
 import regAd from './components/reg_Admins'
@@ -26,6 +27,7 @@ function App() {
          <PrivateRoute path="/home"  roles={['admin','user','SU']} component={Home}/>
          {/** Ruta para los Admins */}
          <PrivateRoute path="/newCert" roles={['admin']} component={Newcert}/>
+         <PrivateRoute path="/newCert2" roles={['admin']} component={Newcert2}/>
          {/** Ruta para El SuperUser */}
          <PrivateRoute path="/regAdmins"  roles={['SU']} component={regAd}/>
     </Router>

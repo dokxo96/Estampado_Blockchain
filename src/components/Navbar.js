@@ -71,7 +71,7 @@ const Navbar = props =>{
    
                     </Link>:null
                   }
-                  <Link to='/login'>
+                  <Link to='/'>
                         <h6 style={{"WebkitTextStroke":"0px black"}} onClick={onClickLogoutHandler} className="nav-item nav-link ">Salir</h6>     
                   </Link>
              

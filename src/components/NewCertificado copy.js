@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Web3 from 'web3';
 import '../App.css';
 import Meme from '../abis/Meme.json'
-import logo from '../../src/assets/img/Sep-bgremove.png'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
@@ -72,6 +70,7 @@ class NewCertificado extends Component {
   onSubmit = (event) => {
     event.preventDefault()
     console.log("Submitting file to ipfs...")
+    console.log('buufer',this.state.buffer)
     ipfs.add(this.state.buffer, (error, result) => {
       console.log('Ipfs result', result)
       if(error) {
@@ -85,162 +84,21 @@ class NewCertificado extends Component {
   }
 
     render() {
-        return (
-          <div>
-            {/**    <nav className="navbar navbar-expand-lg   " id="mainNav">
-                    <div className="container">
-                    <img className="mediana" src={logo} alt="" />
-                      
-                        <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                            Menu
-                            <i className="fa fa-bars"></i>
-                        </button>
-                      <div className="collapse navbar-collapse" id="navbarResponsive">
-                        <ul className="navbar-nav text-uppercase ml-auto">
-                          <li className="nav-item">
-                            <a className="nav-link js-scroll-trigger" href="#">Solicitudes</a>
-                          </li>
-                          <li className="nav-item">
-                          <Link className="nav-link js-scroll-trigger" to={"/sign-in"} href="javascript:location.reload()" >Listado de Alumnos</Link>   
-                          </li>
-                          <li className="nav-item">
-                          <Link className=" nav-link js-scroll-trigger" to={"/"}href="javascript:location.reload()"  >Salir</Link>       
-                        </li>
-                        </ul>
+        return (  
+            <div>
+              <form onSubmit={this.onSubmit}> 
+                    <div className="row">
+                      <div className="col">
+                      <input type="file" accept=".jpg,.png" onChange={this.captureFile}/>
+                      </div>
+                      <div className="col">
+                      <p>&nbsp;</p>
+                      <input type="submit" />
                       </div>
                     </div>
-                </nav>
-*/} 
-          
-                <header className="masthead2" >
-                    <div className="container">
-                        <div className="intro-text" >
-                        
-                               <div className="row">
-                                    <div className="col-12">
-                                      <div className="auth-wrapper">
-                                            <div className="auth-inner">
-                                               
-                                                  <form>
-                                                      <h3>Información básica</h3>
-
-                                                     <div className="row">
-                                                        <div className="col">
-                                                          <input type="text" className="form-control" id="name" placeholder="Nombres" name="names"/>
-                                                        </div>
-                                                        <div className="col">
-                                                          <input type="text" className="form-control" placeholder="Apellidos" name="lastnames"/>
-                                                        </div>
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                     <div className="row">
-                                                      <div className="col">
-                                                        <input type="email" className="form-control" id="email" placeholder="Correo" name="email"/>
-                                                      </div>
-                                                      <div className="col">
-                                                        <input type="tel" className="form-control" placeholder="Telefono" name="phone"  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                                          required/>
-                                                      </div>
-                                                    </div>
-                                                     <p>&nbsp;</p>
-                                                     <div className="row">
-                                                          <div className="col">
-                                                            <select name="Institution" className="custom-select mb-3">
-                                                                  <option defaultValue>Institucion...</option>
-                                                                  <option value="volvo">ITT</option>
-                                                                  <option value="fiat">UAN</option>
-                                                                  <option value="audi">UT</option>
-                                                                </select>
-                                                          </div>
-                                                          <div className="col">
-                                                          <select name="Career" className="custom-select mb-3">
-                                                                  <option defaultValue>Carrera...</option>
-                                                                  <option value="IGE">Ingenieria en Gestion Empresarial</option>
-                                                                  <option value="IE">Ingenieria en Electrica</option>
-                                                                  <option value="ISC">Ingenieria en Sistemas Computacionales</option>
-                                                                  <option value="IC">Ingenieria Civil</option>
-                                                                  <option value="LA">Licenciatura en Arquitectura</option>
-                                                                  
-                                                                </select>
-                                                          </div>
-                                                        </div>
-                                                     <p>&nbsp;</p>
-                                                     <div className="row">
-                                                          <div className="col">
-                                                            <input type="date" title="Fecha de nacimiento" className="form-control" id="d-Birthday" placeholder="Cumpleaños" name="email"/>
-                                                          </div>
-                                                          
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                      <div className="row">
-                                                         
-                                                           <div className="col">
-                                                            <input type="date" title="Fecha de egreso" className="form-control"  name="d-egressdate"  />
-                                                          </div>
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                     <form onSubmit={this.onSubmit}> 
-                                                            <div className="row">
-                                                              <div className="col">
-                                                              <input type="file" accept=".jpg,.png" onChange={this.captureFile}/>
-                                                              </div>
-                                                              <div className="col">
-                                                              <p>&nbsp;</p>
-                                                              <input type="submit" />
-                                                              </div>
-                                                            </div>
-                                                        <img src={`https://ipfs.infura.io/ipfs/${this.state.hash}`} className="img-fluid"  />
-                                                      </form>
-
-                                                  </form>
-                                          
-                                            </div>
-                                        
-                                        </div>
-                                        
-                                    </div>
-                               </div>
-                           
-                        </div>
-                    </div>
-                  </header>
-
-                  <footer className="footer">
-                      <div className="container">
-                        <div className="row align-items-center">
-                          <div className="col-md-4">
-                            <span className="copyright">Copyright &copy; Your Website 2019</span>
-                          </div>
-                          <div className="col-md-4">
-                            <ul style={{"-webkit-text-stroke":"px black"}} className="list-inline social-buttons">
-                              <li className="list-inline-item">
-                                <a href="#something">
-                                  <i style={{"-webkit-text-stroke":".0px black"}} className="fa fa-twitter"></i>
-                                </a>
-                              </li>
-                              <li className="list-inline-item">
-                                <a href="#something">
-                                  <i style={{"-webkit-text-stroke":"0px black"}} className="fa fa-facebook-f"></i>
-                                </a>
-                              </li>
-                            
-                            </ul>
-                          </div>
-                          <div className="col-md-4">
-                            <ul className="list-inline quicklinks">
-                              <li className="list-inline-item">
-                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}} href="#something">Privacy Policy</a>
-                              </li>
-                              <li className="list-inline-item">
-                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}}  href="#something">Terms of Use</a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                   </footer>
-           
-         </div>
+                <img src={`https://ipfs.infura.io/ipfs/${this.state.hash}`} className="img-fluid"  />
+              </form>
+            </div>
         );
     }
 }export default  NewCertificado

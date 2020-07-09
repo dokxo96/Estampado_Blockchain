@@ -1,22 +1,28 @@
-import React, { Component } from 'react';
+import React, { Component, useState,useEffect,useRef } from 'react';
 import Web3 from 'web3';
 import '../App.css';
 import Meme from '../abis/Meme.json'
 import logo from '../../src/assets/img/Sep-bgremove.png'
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
+import Button from 'react-bootstrap/Button';
+import AuthService from '../Services/AuthService';
+import Message from '../components/Message';
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 
-class NewCertificado extends Component {
 
-  
-  async componentWillMount() {
+  const NewCertificado = props => {
+
+    const [initialBc,setInitialBc]=useState({Hash: '',contract: null,buffer:null,web3: null,account: null});
+  //  const [Buffe,setBuffer]=useState(null );
+    const [user,setUser] = useState({firstname:"",lastname:"",username: "", password : "",phone:"",institution:"",carrer:"",finish:"",role:"user"});
+    const [message,setMessage] = useState(null);
+
+  async function componentWillMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
   }
-
-  async loadWeb3() {
+  async function loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       await window.ethereum.enable()
@@ -28,89 +34,94 @@ class NewCertificado extends Component {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
     }
   }
-
-  async loadBlockchainData() {
+  async function loadBlockchainData() {
     const web3 = window.web3
     // Load account
     const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
+    setInitialBc({account:accounts[0] })
+    console.log(initialBc.account)
     const networkId = await web3.eth.net.getId()
     const networkData = Meme.networks[networkId]
     if(networkData) {
-      const contract = web3.eth.Contract(Meme.abi, networkData.address)
-      this.setState({ contract })
-      const Hash = await contract.methods.get().call()
-      this.setState({ Hash })
+      const contracts = web3.eth.Contract(Meme.abi, networkData.address)
+      
+      setInitialBc({contract:contracts })
+      console.log(initialBc.contract)
+      //this.setState({ contract })
+      const Hashs = await initialBc.contract.methods.get.call()
+      setInitialBc({Hash:Hashs })
+      console.log(initialBc.Hash)
+      //this.setState({ Hash })
     } else {
       window.alert('Smart contract not deployed to detected network.')
     }
   }
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      Hash: '',
-      contract: null,
-      web3: null,
-      buffer: null,
-      account: null
-    }
+  let timerID = useRef(null);
+  
+  useEffect(()=>{
+      return ()=>{
+          clearTimeout(timerID);
+      }
+  },[]);
+  const onChange = e =>{
+    setUser({...user,[e.target.name] : e.target.value});
   }
 
-  captureFile = (event) => {
+  const resetForm = ()=>{ 
+        setUser({firstname:"",lastname:"",username: "", password : "",phone:"",institution:"",carrer:"",finish:"",role:"user"});
+  } 
+  const captureFile = (event) => {
     event.preventDefault()
     const file = event.target.files[0]
     const reader = new window.FileReader()
     reader.readAsArrayBuffer(file)
     reader.onloadend = () => {
-      this.setState({ buffer: Buffer(reader.result) })
-      console.log('buffer', this.state.buffer)
-    }
+      setInitialBc({buffer:Buffer(reader.result) })
+      // setBuffer({buffer:Buffer(reader.result) })
+     
+    } 
+    console.log('buffer', initialBc.buffer)
   }
+  const onSubmit = e =>{
+    e.preventDefault();
 
-  onSubmit = (event) => {
+    
+    AuthService.Certregister(user).then(data=>{
+        const { message } = data;
+        setMessage(message);
+        resetForm();
+        if(!message.msgError){
+          ///aqui va el proceso de ipfs y blockchains
+           console.log("Submitting file to ipfs...");
+           ipfs.add(initialBc.buffer, (error, result) => {
+              console.log('Ipfs result', result)
+              if(error) {
+                console.error(error)
+                return
+              }
+            /*  
+              initialBc.contract.methods
+              .set(result[0].hash)
+              .send({from: initialBc.account})
+              .then((r)=>{
+                  return setInitialBc({Hash: result[0].hash })
+              })
+            */
+            })
+        }
+    });
+}
+ /* const onSubmit = (event) => {
     event.preventDefault()
-    console.log("Submitting file to ipfs...")
-    ipfs.add(this.state.buffer, (error, result) => {
-      console.log('Ipfs result', result)
-      if(error) {
-        console.error(error)
-        return
-      }
-       this.state.contract.methods.set(result[0].hash).send({ from: this.state.account }).then((r) => {
-         return this.setState({ Hash: result[0].hash })
-       })
-    })
-  }
+   
+    
+  }*/
 
-    render() {
+
         return (
           <div>
-            {/**    <nav className="navbar navbar-expand-lg   " id="mainNav">
-                    <div className="container">
-                    <img className="mediana" src={logo} alt="" />
-                      
-                        <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                            Menu
-                            <i className="fa fa-bars"></i>
-                        </button>
-                      <div className="collapse navbar-collapse" id="navbarResponsive">
-                        <ul className="navbar-nav text-uppercase ml-auto">
-                          <li className="nav-item">
-                            <a className="nav-link js-scroll-trigger" href="#">Solicitudes</a>
-                          </li>
-                          <li className="nav-item">
-                          <Link className="nav-link js-scroll-trigger" to={"/sign-in"} href="javascript:location.reload()" >Listado de Alumnos</Link>   
-                          </li>
-                          <li className="nav-item">
-                          <Link className=" nav-link js-scroll-trigger" to={"/"}href="javascript:location.reload()"  >Salir</Link>       
-                        </li>
-                        </ul>
-                      </div>
-                    </div>
-                </nav>
-*/} 
+     
           
                 <header className="masthead2" >
                     <div className="container">
@@ -120,80 +131,128 @@ class NewCertificado extends Component {
                                     <div className="col-12">
                                       <div className="auth-wrapper">
                                             <div className="auth-inner">
-                                               
-                                                  <form>
-                                                      <h3>Información básica</h3>
+                                            <form onSubmit={onSubmit}>
+                                                      <h3>Registrar nuevo certificado</h3>
+                                                      <label htmlFor="firstname" className="sr-only">Nombres: </label>
+                                                    <input 
+                                                            type="text" 
+                                                            name="firstname" 
+                                                            value={user.firstname}
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Nombres:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            
+                                                    <label htmlFor="lastname" className="sr-only">Apellidos: </label>
+                                                    <input type="text" 
+                                                            name="lastname" 
+                                                            value={user.lastname}
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Apellidos:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            
+                                                            
+                                                    <label htmlFor="username" className="sr-only">Username: </label>
+                                                    <input type="text" 
+                                                            name="username" 
+                                                            value={user.username}
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Usuario"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            
+                                                    <label htmlFor="password" className="sr-only">Password: </label>
+                                                    <input type="password" 
+                                                            name="password"
+                                                            value={user.password} 
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Contraseña"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            
+                                                    <label htmlFor="phone" className="sr-only">phone: </label>
+                                                    <input type="Tel" 
+                                                            name="phone"
+                                                            value={user.phone} 
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Telefono"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                    <label htmlFor="institution" className="sr-only">Institucion: </label>
+                                                    <select
+                                                            name="institution"
+                                                            value={user.institution}  
+                                                            onChange={onChange} 
+                                                            className="form-control"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            
+                                                            >
+                                                                <option defaultValue>Institución...</option>
+                                                                  <option value="ITT">ITT</option>
+                                                                  <option value="UAN">UAN</option>
+                                                                  <option value="UT">UT</option>
+                                                            
+                                                    </select>
 
-                                                     <div className="row">
-                                                        <div className="col">
-                                                          <input type="text" className="form-control" id="name" placeholder="Nombres" name="names"/>
-                                                        </div>
-                                                        <div className="col">
-                                                          <input type="text" className="form-control" placeholder="Apellidos" name="lastnames"/>
-                                                        </div>
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                     <div className="row">
-                                                      <div className="col">
-                                                        <input type="email" className="form-control" id="email" placeholder="Correo" name="email"/>
-                                                      </div>
-                                                      <div className="col">
-                                                        <input type="tel" className="form-control" placeholder="Telefono" name="phone"  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                                          required/>
-                                                      </div>
-                                                    </div>
-                                                     <p>&nbsp;</p>
-                                                     <div className="row">
-                                                          <div className="col">
-                                                            <select name="Institution" className="custom-select mb-3">
-                                                                  <option defaultValue>Institucion...</option>
-                                                                  <option value="volvo">ITT</option>
-                                                                  <option value="fiat">UAN</option>
-                                                                  <option value="audi">UT</option>
-                                                                </select>
-                                                          </div>
-                                                          <div className="col">
-                                                          <select name="Career" className="custom-select mb-3">
-                                                                  <option defaultValue>Carrera...</option>
+                                                    <select
+                                                            name="carrer"
+                                                            value={user.carrer}  
+                                                            onChange={onChange} 
+                                                            className="form-control"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            
+                                                            >
+                                                                <option defaultValue>Carrera...</option>
                                                                   <option value="IGE">Ingenieria en Gestion Empresarial</option>
                                                                   <option value="IE">Ingenieria en Electrica</option>
                                                                   <option value="ISC">Ingenieria en Sistemas Computacionales</option>
                                                                   <option value="IC">Ingenieria Civil</option>
                                                                   <option value="LA">Licenciatura en Arquitectura</option>
-                                                                  
-                                                                </select>
-                                                          </div>
-                                                        </div>
-                                                     <p>&nbsp;</p>
-                                                     <div className="row">
-                                                          <div className="col">
-                                                            <input type="date" title="Fecha de nacimiento" className="form-control" id="d-Birthday" placeholder="Cumpleaños" name="email"/>
-                                                          </div>
-                                                          
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                      <div className="row">
-                                                         
-                                                           <div className="col">
-                                                            <input type="date" title="Fecha de egreso" className="form-control"  name="d-egressdate"  />
-                                                          </div>
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                     <form onSubmit={this.onSubmit}> 
-                                                            <div className="row">
-                                                              <div className="col">
-                                                              <input type="file" accept=".jpg,.png" onChange={this.captureFile}/>
-                                                              </div>
-                                                              <div className="col">
-                                                              <p>&nbsp;</p>
-                                                              <input type="submit" />
-                                                              </div>
-                                                            </div>
-                                                        <img src={`https://ipfs.infura.io/ipfs/${this.state.hash}`} className="img-fluid"  />
-                                                      </form>
+                                                            
+                                                    </select>
+                                                    <label htmlFor="finish" className="sr-only">finish: </label>
+                                                    <input type="Date" 
+                                                            name="finish"
+                                                            title="Fecha de egreso"
+                                                            value={user.finish} 
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Telefono"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                    
 
+                                                    
+                                                              <input   
+                                                                    style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                                    type="file" 
+                                                                    className="btn btn-warning  " 
+                                                                    accept=".jpg,.png,.xml" 
+                                                                    onChange={captureFile}
+                                                                    />
+                                                              
+                                                             
+                                                    <Button 
+                                                            style={{"WebkitTextStroke":"0px black","margin":"10px 0px 6px 0px"}} 
+                                                            type="submit"
+                                                            >Registrar
+                                                    </Button>   {message ? <Message message={message}/> : null}      
+                                                    <p>&nbsp;</p>
+                                                    <img 
+                                                            src={`https://ipfs.infura.io/ipfs/${initialBc.hash}`} 
+                                                            className="img-fluid"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}  />
+                                                       
+                                                  
                                                   </form>
-                                          
+                                                 
+                                              
                                             </div>
                                         
                                         </div>
@@ -242,5 +301,6 @@ class NewCertificado extends Component {
            
          </div>
         );
-    }
-}export default  NewCertificado
+  
+}
+export default  NewCertificado;
