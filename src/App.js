@@ -5,12 +5,15 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Mainpage from './components/MainPage'
-import Newcert from './components/NewCertificado'
-import Newcert2 from './components/NewCertificado copy'
+import NewStudent from './components/Create-Student'
+import Newcert2 from './components/NewCertificado'
 
 import PrivateRoute from './hocs/PrivateRoute';
 import Home from './components/Home'
 import regAd from './components/reg_Admins'
+//import Admins from './components/Admins'
+import StudentList from "./components/student-list.component";
+
 import UnPrivateRoute from './hocs/UnPrivateRoute';
 
 import Navbar from  './components/Navbar'
@@ -23,11 +26,11 @@ function App() {
       <Navbar/>
          {/** Ruta principal y libre */}
          <Route exact path="/" component={Mainpage}/>  
-          {/** Ruta para users y admins */}
+          {/** Ruta para users ,admins y SU */}
          <PrivateRoute path="/home"  roles={['admin','user','SU']} component={Home}/>
          {/** Ruta para los Admins */}
-         <PrivateRoute path="/newCert" roles={['admin']} component={Newcert}/>
-         <PrivateRoute path="/newCert2" roles={['admin']} component={Newcert2}/>
+         <PrivateRoute path="/newStudent" roles={['admin']} component={NewStudent}/>
+         <PrivateRoute path="/student-list" roles={['admin']} component={StudentList}/>
          {/** Ruta para El SuperUser */}
          <PrivateRoute path="/regAdmins"  roles={['SU']} component={regAd}/>
     </Router>
