@@ -46,10 +46,20 @@ export default {
             });
     },
     getStudens : ()=>{
-        return fetch('/user/studentsd')
+        return fetch('/user/ded')
                 .then(response=>{
                     if(response.status !== 401){
-                        return response.json()
+                        return response.json(response.data)
+                    }
+                    else
+                        return {message : {msgBody : "UnAuthorized",msgError : true}};
+                });
+    },
+    deleteStudent: id_Student=>{
+        return fetch('/user/delete-student/'+id_Student)
+                .then(response=>{
+                    if(response.status !== 401){
+                        return response.json(response.data)
                     }
                     else
                         return {message : {msgBody : "UnAuthorized",msgError : true}};

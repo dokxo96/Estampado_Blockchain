@@ -39,14 +39,19 @@ export default class StudentList extends Component {
  
 
   render() {
-    return (<div className="table-wrapper">
+    return (
+    <div className="table-wrapper">
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Roll No</th>
-            <th>Action</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Correo</th>
+            <th>Telefono</th>
+            <th>Institución</th>
+            <th>Carrera</th>
+            <th>Fecha de egreso</th>
+            
           </tr>
         </thead>
         <tbody>
