@@ -46,7 +46,7 @@ export default {
             });
     },
     getStudens : ()=>{
-        return fetch('/user/ded')
+        return fetch('/user/get-student')
                 .then(response=>{
                     if(response.status !== 401){
                         return response.json(response.data)
@@ -56,14 +56,10 @@ export default {
                 });
     },
     deleteStudent: id_Student=>{
-        return fetch('/user/delete-student/'+id_Student)
-                .then(response=>{
-                    if(response.status !== 401){
-                        return response.json(response.data)
-                    }
-                    else
-                        return {message : {msgBody : "UnAuthorized",msgError : true}};
-                });
+        return fetch('/user/delete-student/'+id_Student , {
+            method: 'delete'
+          })
+          .then(response => response.json());
     },
     postAdmin  : admin=>{
         return fetch('/user/admin',{

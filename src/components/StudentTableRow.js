@@ -14,7 +14,8 @@ export default class StudentTableRow extends Component {
     deleteStudent() {
        AuthService.deleteStudent(this.props.obj._id)
             .then((res) => {
-                console.log('Student successfully deleted!')
+                console.log('Student successfully deleted!');
+                window.location.reload(true);
             }).catch((error) => {
                 console.log(error)
             })
