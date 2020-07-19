@@ -12,6 +12,7 @@ import PrivateRoute from './hocs/PrivateRoute';
 import Home from './components/Home'
 import regAd from './components/reg_Admins'
 //import Admins from './components/Admins'
+import editStudent from './components/Edit-Student'
 import StudentList from "./components/student-list.component";
 
 import UnPrivateRoute from './hocs/UnPrivateRoute';
@@ -31,6 +32,8 @@ function App() {
          {/** Ruta para los Admins */}
          <PrivateRoute path="/newStudent" roles={['admin']} component={NewStudent}/>
          <PrivateRoute path="/student-list" roles={['admin']} component={StudentList}/>
+         <PrivateRoute path="/edit-student/:id" roles={['admin']} component={editStudent}/>
+
          {/** Ruta para El SuperUser */}
          <PrivateRoute path="/regAdmins"  roles={['SU']} component={regAd}/>
     </Router>

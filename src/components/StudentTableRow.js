@@ -4,6 +4,7 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import AuthService from "../Services/AuthService";
 import AuthContext from '../Context/AuthContext';
+import EditStudent from './Edit-Student';
 export default class StudentTableRow extends Component {
 
     constructor(props) {
@@ -33,9 +34,11 @@ export default class StudentTableRow extends Component {
                 <td>{this.props.obj.finish}</td>
                 <td>
                     <Link className="edit-link" to={"/edit-student/" + this.props.obj._id}>
-                    <Button  size="sm" bg-color="white" variant="warning">Editar</Button>
+                   
+                    <Button  size="md"  variant="danger">Editar</Button>
                     </Link>
                     <Button onClick={this.deleteStudent} size="sm" variant="danger">Eliminar</Button>
+                   
                 </td>
             </tr>
         );

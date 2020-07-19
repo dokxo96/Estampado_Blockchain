@@ -1,3 +1,4 @@
+import { use } from "chai";
 
 export default {
     login : user =>{
@@ -45,8 +46,20 @@ export default {
             console.log(err)
             });
     },
+    
     getStudens : ()=>{
         return fetch('/user/get-student')
+                .then(response=>{
+                    if(response.status !== 401){
+                        return response.json(response.data)
+                    }
+                    else
+                        return {message : {msgBody : "UnAuthorized",msgError : true}};
+                });
+    },
+    
+    getStudent :id_Student =>{
+        return fetch('/user/edit-student/' + id_Student)
                 .then(response=>{
                     if(response.status !== 401){
                         return response.json(response.data)
@@ -60,6 +73,29 @@ export default {
             method: 'delete'
           })
           .then(response => response.json());
+    },
+    updateStudent : Student=>{
+        fetch('/user/update-student/'+Student.id, Student.Object)
+      .then((res) => {
+        console.log(res.data)
+        console.log('Student successfully updated')
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    updateDD : user =>{
+        console.log(user);
+        return fetch('/user/update-student/'+user.id,{
+            method : "put",
+            body : JSON.stringify(user),
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        }).then(res => res.json())
+          .then(data => data)
+          .catch((err) => {
+            console.log(err)
+            });
     },
     postAdmin  : admin=>{
         return fetch('/user/admin',{
