@@ -16,7 +16,8 @@ import Message from './Message';
   }
  
   useEffect(()=>{
-    AuthService.getStudent("5f065a030213634f397f0a34")
+    console.log("props",props)
+    AuthService.getStudent(props.match.params.id)
     .then(res => {
       console.log(res._id)
       setUser({

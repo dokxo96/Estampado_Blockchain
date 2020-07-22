@@ -50,6 +50,7 @@ export default {
     getStudens : ()=>{
         return fetch('/user/get-student')
                 .then(response=>{
+                    console.log(response.status)
                     if(response.status !== 401){
                         return response.json(response.data)
                     }
@@ -87,6 +88,20 @@ export default {
         console.log(user);
         return fetch('/user/update-student/'+user.id,{
             method : "put",
+            body : JSON.stringify(user),
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        }).then(res => res.json())
+          .then(data => data)
+          .catch((err) => {
+            console.log(err)
+            });
+    },
+    regnewcertbyid : user =>{
+        console.log(user);
+        return fetch('/user/cert/'+user.id,{
+            method : "post",
             body : JSON.stringify(user),
             headers : {
                 'Content-Type' : 'application/json'

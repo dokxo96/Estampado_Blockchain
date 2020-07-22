@@ -27,7 +27,8 @@ import Message from './Message';
           finish:"",
           role:"user"});
   } 
- 
+  let timerID = useRef(null);
+
   const onSubmit = e =>{
     e.preventDefault();
 
@@ -37,7 +38,9 @@ import Message from './Message';
         setMessage(message);
         resetForm();
         if(!message.msgError){
-         
+          timerID = setTimeout(()=>{
+            props.history.push('/student-list');
+         },2000)
         }
     });
 }

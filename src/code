@@ -29,6 +29,22 @@
     </div></Router>
 
 
+    /////////////// consimuir api desde blockchain view
+
+
+     AuthService.regnewcertbyid(this.state).then(data=>{
+         const { message } = data;
+         
+          //resetForm();
+          this.setState(message=message);
+          if(!message.msgError){
+            timerID = setTimeout(()=>{
+              this.props.history.push('/student-list');
+           },2000)
+          }
+      });
+
+
 
 
 

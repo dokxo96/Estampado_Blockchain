@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component,useRef } from 'react';
 import Web3 from 'web3';
 import '../App.css';
 import Meme from '../abis/Meme.json'
-import logo from '../../src/assets/img/Sep-bgremove.png'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
+import AuthService from '../Services/AuthService'
+import CertService from '../Services/CertService'
+import Button from 'react-bootstrap/Button'
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }) // leaving out the arguments will default to these values
 
@@ -12,8 +12,32 @@ class NewCertificado extends Component {
 
   
   async componentWillMount() {
-    await this.loadWeb3()
-    await this.loadBlockchainData()
+   
+    console.log("props",this.props.match.params.id)
+   await AuthService.getStudent(this.props.match.params.id)
+    .then(res => {
+      console.log(res._id)
+      this.setState({
+        id:res._id,
+        firstname:res.firstname,
+        lastname:res.lastname,
+        username: res.username, 
+        password : res.password,
+        phone:res.phone,
+        institution:res.institution,
+        carrer:res.carrer,
+        finish:res.finish,
+      });
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    console.log(this.state.username)
+
+    await this.loadWeb3();
+    await this.loadBlockchainData();
+
   }
 
   async loadWeb3() {
@@ -29,6 +53,9 @@ class NewCertificado extends Component {
     }
   }
 
+  onChange = e =>{
+    this.setState({...this.state,[e.target.name] : e.target.value});
+  }
   async loadBlockchainData() {
     const web3 = window.web3
     // Load account
@@ -45,16 +72,30 @@ class NewCertificado extends Component {
       window.alert('Smart contract not deployed to detected network.')
     }
   }
-
+  
   constructor(props) {
     super(props)
-
+    
     this.state = {
       Hash: '',
       contract: null,
       web3: null,
       buffer: null,
-      account: null
+      account: null,
+      firstname:"",
+      lastname:"",
+      username:"",
+      phone:"",
+      institution:"",
+      carrer:"",
+      finish:"",
+      title:"",
+      id:"",
+      user:{
+        id:"",
+        title:"",
+        hash:""
+      }
     }
   }
 
@@ -69,6 +110,7 @@ class NewCertificado extends Component {
     }
   }
 
+
   onSubmit = (event) => {
     event.preventDefault()
     console.log("Submitting file to ipfs...")
@@ -82,119 +124,195 @@ class NewCertificado extends Component {
        this.state.contract.methods.set(result[0].hash).send({ from: this.state.account }).then((r) => {
          return this.setState({ Hash: result[0].hash })
        })
+        console.log("hash",this.state.Hash)
+       this.setState({
+         user:
+         {
+           id:this.state.id,
+           title:this.state.title,
+           hash:this.state.Hash
+          }
+        });
+       console.log(this.state.user)
+    AuthService.regnewcertbyid(this.state.user).then(data=>{
+      const { message } = data;
+      let timerID = (null);
+
+       //resetForm();
+     
+     // this.setState(message=message);
+       if(!message.msgError){
+        timerID = setTimeout(()=>{
+         this.props.history.push('/student-list');
+        },8000)
+       console.log("se añadio")
+       }
+   });
+        
     })
   }
 
     render() {
+      
         return (
           <div>
-            {/**    <nav className="navbar navbar-expand-lg   " id="mainNav">
-                    <div className="container">
-                    <img className="mediana" src={logo} alt="" />
-                      
-                        <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                            Menu
-                            <i className="fa fa-bars"></i>
-                        </button>
-                      <div className="collapse navbar-collapse" id="navbarResponsive">
-                        <ul className="navbar-nav text-uppercase ml-auto">
-                          <li className="nav-item">
-                            <a className="nav-link js-scroll-trigger" href="#">Solicitudes</a>
-                          </li>
-                          <li className="nav-item">
-                          <Link className="nav-link js-scroll-trigger" to={"/sign-in"} href="javascript:location.reload()" >Listado de Alumnos</Link>   
-                          </li>
-                          <li className="nav-item">
-                          <Link className=" nav-link js-scroll-trigger" to={"/"}href="javascript:location.reload()"  >Salir</Link>       
-                        </li>
-                        </ul>
-                      </div>
-                    </div>
-                </nav>
-*/} 
-          
+                 
                 <header className="masthead2" >
                     <div className="container">
                         <div className="intro-text" >
                         
                                <div className="row">
-                                    <div className="col-12">
+                                 <div className="col-6">
                                       <div className="auth-wrapper">
                                             <div className="auth-inner">
-                                               
-                                                  <form>
-                                                      <h3>Información básica</h3>
-
-                                                     <div className="row">
-                                                        <div className="col">
-                                                          <input type="text" className="form-control" id="name" placeholder="Nombres" name="names"/>
-                                                        </div>
-                                                        <div className="col">
-                                                          <input type="text" className="form-control" placeholder="Apellidos" name="lastnames"/>
-                                                        </div>
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                     <div className="row">
-                                                      <div className="col">
-                                                        <input type="email" className="form-control" id="email" placeholder="Correo" name="email"/>
-                                                      </div>
-                                                      <div className="col">
-                                                        <input type="tel" className="form-control" placeholder="Telefono" name="phone"  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                                          required/>
-                                                      </div>
-                                                    </div>
-                                                     <p>&nbsp;</p>
-                                                     <div className="row">
-                                                          <div className="col">
-                                                            <select name="Institution" className="custom-select mb-3">
-                                                                  <option defaultValue>Institucion...</option>
-                                                                  <option value="volvo">ITT</option>
-                                                                  <option value="fiat">UAN</option>
-                                                                  <option value="audi">UT</option>
-                                                                </select>
-                                                          </div>
-                                                          <div className="col">
-                                                          <select name="Career" className="custom-select mb-3">
-                                                                  <option defaultValue>Carrera...</option>
-                                                                  <option value="IGE">Ingenieria en Gestion Empresarial</option>
-                                                                  <option value="IE">Ingenieria en Electrica</option>
-                                                                  <option value="ISC">Ingenieria en Sistemas Computacionales</option>
-                                                                  <option value="IC">Ingenieria Civil</option>
-                                                                  <option value="LA">Licenciatura en Arquitectura</option>
-                                                                  
-                                                                </select>
-                                                          </div>
-                                                        </div>
-                                                     <p>&nbsp;</p>
-                                                     <div className="row">
-                                                          <div className="col">
-                                                            <input type="date" title="Fecha de nacimiento" className="form-control" id="d-Birthday" placeholder="Cumpleaños" name="email"/>
-                                                          </div>
-                                                          
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                      <div className="row">
-                                                         
-                                                           <div className="col">
-                                                            <input type="date" title="Fecha de egreso" className="form-control"  name="d-egressdate"  />
-                                                          </div>
-                                                      </div>
-                                                      <p>&nbsp;</p>
-                                                     <form onSubmit={this.onSubmit}> 
-                                                            <div className="row">
+                                            <form onSubmit={this.onSubmit} >
+                                                      <h3>Registrar nuevo certificado</h3>
+                                                      <label htmlFor="title" className="sr-only">Titulo: </label>
+                                                    <input 
+                                                            type="text" 
+                                                            name="title" 
+                                                           
+                                                            onChange={this.onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Titulo:"
+                                                            required="true"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                 
+                                                   
+                                                    <div className="row">
                                                               <div className="col">
-                                                              <input type="file" accept=".jpg,.png" onChange={this.captureFile}/>
+                                                              <input required="true" type="file" accept=".jpg,.png" onChange={this.captureFile}/>
                                                               </div>
                                                               <div className="col">
                                                               <p>&nbsp;</p>
                                                               <input type="submit" />
                                                               </div>
                                                             </div>
-                                                        <img src={`https://ipfs.infura.io/ipfs/${this.state.hash}`} className="img-fluid"  />
-                                                      </form>
-
+                                                        <img src={`https://ipfs.infura.io/ipfs/${this.state.Hash}`} 
+                                                        className="img-fluid"
+                                                        style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}    />
+                                                  
                                                   </form>
-                                          
+        
+                                               
+                                            </div>
+                                        
+                                        </div>
+                                        
+                                    </div>
+                               
+                                  <div className="col-6">
+                                      <div className="auth-wrapper">
+                                            <div className="auth-inner">
+                                            <form >
+                                                      <h3>Información del alumno</h3>
+                                                      <label htmlFor="firstname" className="sr-only">Nombres: </label>
+                                                    <input 
+                                                            type="text" 
+                                                            name="firstname" 
+                                                            value={this.state.firstname}
+                                                            readOnly={true}
+                                                            
+                                                           // onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Nombres:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            
+                                                    <label htmlFor="lastname" className="sr-only">Apellidos: </label>
+                                                    <input type="text" 
+                                                            name="lastname" 
+                                                            value={this.state.lastname}
+                                                            readOnly={true}
+                                                            
+                                                           // onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Apellidos:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            
+                                                            
+                                                   
+                                                            
+                                                    <label htmlFor="username" className="sr-only">Username: </label>
+                                                    <input type="test" 
+                                                            name="username"
+                                                            value={this.state.username}
+                                                            readOnly={true}
+                                                            
+                                                           // onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Usuario:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            
+                                                    <label htmlFor="phone" className="sr-only">phone: </label>
+                                                    <input type="Tel" 
+                                                            name="phone"
+                                                            value={this.state.phone}
+                                                            readOnly={true}
+                                                           
+                                                           // onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Telefono:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                    <label htmlFor="institution" className="sr-only">Institucion: </label>
+                                                    <select
+                                                            name="institution"
+                                                            value={this.state.institution}
+                                                            readOnly={true}
+                                                          
+                                                          // 7  onChange={onChange} 
+                                                            className="form-control"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            
+                                                            >
+                                                                <option defaultValue>Institución...</option>
+                                                                  <option value="ITT">ITT</option>
+                                                                  <option value="UAN">UAN</option>
+                                                                  <option value="UT">UT</option>
+                                                            
+                                                    </select>
+
+                                                    <select
+                                                            name="carrer"
+                                                            value={this.state.carrer} 
+                                                            readOnly={true}
+                                                            
+                                                          //  onChange={onChange} 
+                                                            className="form-control"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            
+                                                            >
+                                                                <option defaultValue>Carrera...</option>
+                                                                  <option value="IGE">Ingenieria en Gestion Empresarial</option>
+                                                                  <option value="IE">Ingenieria en Electrica</option>
+                                                                  <option value="ISC">Ingenieria en Sistemas Computacionales</option>
+                                                                  <option value="IC">Ingenieria Civil</option>
+                                                                  <option value="LA">Licenciatura en Arquitectura</option>
+                                                            
+                                                    </select>
+                                                    <label htmlFor="finish" className="sr-only">finish: </label>
+                                                    <input type="Date" 
+                                                            name="finish"
+                                                            readOnly={true}
+                                                           
+                                                            title="Fecha de egreso"
+                                                            value={this.state.finish}
+                                                         //   onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Telefono"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                               
+                                                        
+                                                    <p>&nbsp;</p>
+                                                   
+                                                  
+                                                  </form>
+        
                                             </div>
                                         
                                         </div>
@@ -213,15 +331,15 @@ class NewCertificado extends Component {
                             <span className="copyright">Copyright &copy; Your Website 2019</span>
                           </div>
                           <div className="col-md-4">
-                            <ul style={{"-webkit-text-stroke":"px black"}} className="list-inline social-buttons">
+                            <ul style={{"WebkitTextStroke":"px black"}} className="list-inline social-buttons">
                               <li className="list-inline-item">
                                 <a href="#something">
-                                  <i style={{"-webkit-text-stroke":".0px black"}} className="fa fa-twitter"></i>
+                                  <i style={{"WebkitTextStroke":".0px black"}} className="fa fa-twitter"></i>
                                 </a>
                               </li>
                               <li className="list-inline-item">
                                 <a href="#something">
-                                  <i style={{"-webkit-text-stroke":"0px black"}} className="fa fa-facebook-f"></i>
+                                  <i style={{"WebkitTextStroke":"0px black"}} className="fa fa-facebook-f"></i>
                                 </a>
                               </li>
                             
@@ -230,10 +348,10 @@ class NewCertificado extends Component {
                           <div className="col-md-4">
                             <ul className="list-inline quicklinks">
                               <li className="list-inline-item">
-                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}} href="#something">Privacy Policy</a>
+                                <a style={{"WebkitTextStroke":"0px black","color":"#080808"}} href="#something">Privacy Policy</a>
                               </li>
                               <li className="list-inline-item">
-                                <a style={{"-webkit-text-stroke":"0px black","color":"#080808"}}  href="#something">Terms of Use</a>
+                                <a style={{"WebkitTextStroke":"0px black","color":"#080808"}}  href="#something">Terms of Use</a>
                               </li>
                             </ul>
                           </div>

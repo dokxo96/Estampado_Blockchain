@@ -33,11 +33,9 @@ export default class StudentTableRow extends Component {
                 <td>{this.props.obj.carrer}</td>
                 <td>{this.props.obj.finish}</td>
                 <td>
-                    <Link className="edit-link" to={"/edit-student/" + this.props.obj._id}>
-                   
-                    <Button  size="md"  variant="danger">Editar</Button>
-                    </Link>
-                    <Button onClick={this.deleteStudent} size="sm" variant="danger">Eliminar</Button>
+                 <Button href={"/edit-student/" + this.props.obj._id} style={{"WebkitTextStroke":"0px black"}} size="sm"  variant="success">Editar</Button>
+        <Button href={"/newcert/" + this.props.obj._id} style={{"WebkitTextStroke":"0px black"}} size="sm"  variant="warning">nuevo certificado</Button>
+                 <Button onClick={this.deleteStudent} size="sm" variant="danger">Eliminar</Button>
                    
                 </td>
             </tr>
