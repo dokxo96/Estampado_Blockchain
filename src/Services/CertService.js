@@ -1,14 +1,13 @@
 export default {
     getCerts : ()=>{
-        return fetch('/user/todos')
-                .then(response=>{
-                    if(response.status !== 401){
-                        return response.json().then(data => data);
-                    }
-                    else
-                        return {message : {msgBody : "UnAuthorized",msgError : true}};
-                });
-    },
+        return fetch('/user/cert')
+            .then(response=>{
+                if(response.status !== 401){
+                    return response.json(response.data)
+                }else
+                    return { message : { msgBody : "UnAuthorized", msgError : true}};
+            });
+    }/*,
     postCert : cert=>{
         return fetch('/user/cert',{
             method : "post",
@@ -23,5 +22,5 @@ export default {
             else
                 return {message : {msgBody : "UnAuthorized"},msgError : true};
         });
-    }
+    }*/
 }

@@ -50,7 +50,6 @@ export default {
     getStudens : ()=>{
         return fetch('/user/get-student')
                 .then(response=>{
-                    console.log(response.status)
                     if(response.status !== 401){
                         return response.json(response.data)
                     }

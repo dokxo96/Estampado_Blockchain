@@ -17,7 +17,9 @@ import StudentList from "./components/student-list.component";
 
 import UnPrivateRoute from './hocs/UnPrivateRoute';
 
-import Navbar from  './components/Navbar'
+import Navbar from  './components/Navbar';
+
+import CertId from "./components/CertId";
 
 function App() {
  
@@ -37,6 +39,9 @@ function App() {
 
          {/** Ruta para El SuperUser */}
          <PrivateRoute path="/regAdmins"  roles={['SU']} component={regAd}/>
+
+         {/** Ruta para el Alumno */}
+         <PrivateRoute path="/Mititulo"  roles={['user']} component={CertId}/>
     </Router>
     
   );
