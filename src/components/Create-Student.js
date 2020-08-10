@@ -60,7 +60,7 @@ import Message from './Message';
                                       <div className="auth-wrapper">
                                             <div className="auth-inner">
                                             <form onSubmit={onSubmit}>
-                                                      <h3>Registrar nuevo certificado</h3>
+                                                      <h3>Registrar nuevo alumno</h3>
                                                       <label htmlFor="firstname" className="sr-only">Nombres: </label>
                                                     <input 
                                                             type="text" 

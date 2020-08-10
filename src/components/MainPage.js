@@ -67,12 +67,14 @@ const MainPage = props => {
                                                             name="username" 
                                                             onChange={onChange} 
                                                             className="form-control" 
+                                                            required="true"
                                                             placeholder="Usuario:"/>
                                                              <p>&nbsp;</p>
                                                         <label htmlFor="password" className="sr-only">Contraseña: </label>
                                                         <input type="password" 
                                                             name="password" 
-                                                            onChange={onChange} 
+                                                            onChange={onChange}
+                                                            required="true" 
                                                             className="form-control" 
                                                             placeholder="Contraseña:"/>
                                                              <p>&nbsp;</p>

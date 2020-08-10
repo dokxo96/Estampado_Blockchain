@@ -98,7 +98,7 @@ class NewCertificado extends Component {
       }
     }
   }
-
+  //this is a method to capture a file 
   captureFile = (event) => {
     event.preventDefault()
     const file = event.target.files[0]
@@ -110,17 +110,18 @@ class NewCertificado extends Component {
     }
   }
 
-
+//this is a method to add the file to the ipfs infura server and add to the blockchain network
   onSubmit = (event) => {
     event.preventDefault()
     console.log("Submitting file to ipfs...")
     console.log('buufer',this.state.buffer)
+    //ipfs method
     ipfs.add(this.state.buffer, (error, result) => {
       console.log('Ipfs result', result)
       if(error) {
         console.error(error)
         return
-      }
+      }//blockchain method to add y and ge4t the ipfs hash
        this.state.contract.methods.set(result[0].hash).send({ from: this.state.account }).then((r) => {
          return this.setState({ Hash: result[0].hash })
        })
@@ -133,21 +134,26 @@ class NewCertificado extends Component {
            hash:this.state.Hash
           }
         });
-       console.log(this.state.user)
-    AuthService.regnewcertbyid(this.state.user).then(data=>{
-      const { message } = data;
-      let timerID = (null);
+       console.log("usedatacer",this.state.user)
+      if(this.state.user.hash != null)
+        {
+          //this method save the title,the hash to the id user
+            AuthService.regnewcertbyid(this.state.user).then(data=>{
+              const { message } = data;
+              let timerID = (null);
 
-       //resetForm();
-     
-     // this.setState(message=message);
-       if(!message.msgError){
-        timerID = setTimeout(()=>{
-         this.props.history.push('/student-list');
-        },8000)
-       console.log("se añadio")
+            
+            // this.setState(message=message);
+              if(!message.msgError){
+                timerID = setTimeout(()=>{
+                  this.props.history.push('/student-list');
+                },8000)
+              console.log("se añadio")
+                }
+            }
+            );
        }
-   });
+    
         
     })
   }
