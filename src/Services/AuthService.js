@@ -153,6 +153,30 @@ export default {
                     else
                         return { isAuthenticated : false, user : {username : "",role : ""}};
                 });
+    },
+    solCert : cert =>{
+        return fetch('/user/solCert',{
+            method : "post",
+            body : JSON.stringify(cert),
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        }).then(res => {
+            if(res.status !== 401)
+                return res.json().then(data => data);
+            else
+                return { isAuthenticated : false, user : {username : "",role : ""}};
+        }).catch((err) => {
+            console.log(err)
+        })
+    },
+    getSolCert : ()=>{
+        return fetch('/user/get-solCert')
+            .then(response=>{
+                if(response.status !== 401)
+                    return response.json(response.data)
+                else
+                    return {message : {msgBody : "UnAuthorized", msgError : true}};
+            });
     }
-
 }
