@@ -13,6 +13,7 @@ export default class EditStudent extends Component {
     this.onChangeStudentRollno = this.onChangeStudentRollno.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
+    
     // State
     this.state = {
       name: '',
