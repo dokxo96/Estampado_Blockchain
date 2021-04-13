@@ -14,7 +14,7 @@ import regAd from './components/reg_Admins'
 //import Admins from './components/Admins'
 import editStudent from './components/Edit-Student'
 import StudentList from "./components/student-list.component";
-
+import DocCert from './components/DocCert'
 import UnPrivateRoute from './hocs/UnPrivateRoute';
 
 import Navbar from  './components/Navbar';
@@ -36,6 +36,7 @@ function App() {
          <PrivateRoute path="/student-list" roles={['admin']} component={StudentList}/>
          <PrivateRoute path="/edit-student/:id" roles={['admin']} component={editStudent}/>
          <PrivateRoute path="/newcert/:id" roles={['admin']} component={Newcert2}/>
+         <PrivateRoute path="/DocCert" roles={['admin']} component={DocCert}/>
 
          {/** Ruta para El SuperUser */}
          <PrivateRoute path="/regAdmins"  roles={['SU']} component={regAd}/>

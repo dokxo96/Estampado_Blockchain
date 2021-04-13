@@ -24,6 +24,7 @@ class NewCertificado extends Component {
         username: res.username, 
         password : res.password,
         phone:res.phone,
+        address:res.address,
         institution:res.institution,
         carrer:res.carrer,
         finish:res.finish,
@@ -90,6 +91,7 @@ class NewCertificado extends Component {
       carrer:"",
       finish:"",
       title:"",
+      address:"",
       id:"",
       user:{
         id:"",
@@ -116,6 +118,7 @@ class NewCertificado extends Component {
     console.log("Submitting file to ipfs...")
     console.log('buufer',this.state.buffer)
     //ipfs method
+    
     ipfs.add(this.state.buffer, (error, result) => {
       console.log('Ipfs result', result)
       if(error) {
@@ -257,6 +260,17 @@ class NewCertificado extends Component {
                                                     <input type="Tel" 
                                                             name="phone"
                                                             value={this.state.phone}
+                                                            readOnly={true}
+                                                           
+                                                           // onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Telefono:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
+                                                            <label htmlFor="address" className="sr-only">address: </label>
+                                                    <input type="Text" 
+                                                            name="address"
+                                                            value={this.state.Address}
                                                             readOnly={true}
                                                            
                                                            // onChange={onChange} 

@@ -8,7 +8,7 @@ import Message from './Message';
 
 
   const CreateStudent = props => {
-  const [user,setUser] = useState({firstname:"",lastname:"",username: "", password : "",phone:"",institution:"",carrer:"",finish:"",role:"user"});
+  const [user,setUser] = useState({firstname:"",lastname:"",username: "", password : "",address:"",phone:"",institution:"",carrer:"",finish:"",role:"user"});
   const [message,setMessage] = useState(null);
 
  const onChange = e =>{
@@ -25,19 +25,21 @@ import Message from './Message';
           institution:"",
           carrer:"",
           finish:"",
-          role:"user"});
+          role:"user",
+          address:""});
   } 
   let timerID = useRef(null);
 
   const onSubmit = e =>{
     e.preventDefault();
 
-    
+    console.log(user);
     AuthService.Certregister(user).then(data=>{
         const { message } = data;
-        setMessage(message);
+        
         resetForm();
         if(!message.msgError){
+          setMessage("Se creó el Estudiante");
           timerID = setTimeout(()=>{
             props.history.push('/student-list');
          },2000)
@@ -102,7 +104,15 @@ import Message from './Message';
                                                             placeholder="Contraseña"
                                                             style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
                                                             />
-                                                            
+                                                    <label htmlFor="address" className="sr-only">Direecion de cartera: </label>
+                                                    <input type="text" 
+                                                            name="address" 
+                                                            value={user.address}
+                                                            onChange={onChange} 
+                                                            className="form-control" 
+                                                            placeholder="Cartera:"
+                                                            style={{"WebkitTextStroke":".1px black","margin":"10px 0px 6px 0px"}}
+                                                            />
                                                     <label htmlFor="phone" className="sr-only">phone: </label>
                                                     <input type="Tel" 
                                                             name="phone"

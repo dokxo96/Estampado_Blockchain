@@ -70,6 +70,12 @@ const Navbar = props =>{
                        <h6 style={{"WebkitTextStroke":"0px black"}}  className="nav-item nav-link ">Lista alumnos</h6>     
    
                     </Link>:null
+                  } {
+                    user.role==="admin" ?
+                    <Link to='/DocCert'>
+                       <h6 style={{"WebkitTextStroke":"0px black"}}  className="nav-item nav-link ">Doc-Cert</h6>     
+   
+                    </Link>:null
                   }
                    {
                     user.role==="SU" ?

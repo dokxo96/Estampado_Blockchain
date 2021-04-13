@@ -1,0 +1,15 @@
+ const value = window.web3.utils.toWei('0.00022', 'ether');    //invest
+    const to = "0x9F4152a30cb683aD284dff6629E809B80Ff555C1";
+    const payload ={
+      to,
+      from:this.state.account,
+      value
+    };
+    window.web3.eth.sendTransaction(payload, (error, response)=>{
+      if (error)return;
+       
+        console.log("TX:"+response +"\n Se pago comisión");
+       
+      
+      return response;
+    })
