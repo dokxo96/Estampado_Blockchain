@@ -99,7 +99,7 @@ export default {
     },
     regnewcertbyid : user =>{
         console.log(user);
-        return fetch('/user/cert/'+user.id,{
+        return fetch('/user/cert/',{
             method : "post",
             body : JSON.stringify(user),
             headers : {

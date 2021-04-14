@@ -71,17 +71,22 @@ class DocCert extends Component {
       title:"",
       address:"",
       id:"",
+      hashIpfs:"",
       user:{
         id:"",
         title:"",
-        hash:""
+        hash:"",
+        hashIpfs:""
       }
     }
+  }
+  saveToDB(){
+
   }
   //this is a method to capture a file 
   captureFile = (event) => {
 
-
+/*
     const value = window.web3.utils.toWei('0.00022', 'ether');    //invest
     const to = "0x9F4152a30cb683aD284dff6629E809B80Ff555C1";
     const payload ={
@@ -96,7 +101,7 @@ class DocCert extends Component {
        
       
       return response;
-    })
+    })*/
     event.preventDefault()
     const file = event.target.files[0]
     const reader = new window.FileReader()
@@ -113,29 +118,60 @@ class DocCert extends Component {
           console.error(error)
           return
         }//blockchain method to add y and ge4t the ipfs hash
-        this.setState({ Hash: result[0].hash })
-        const data =   ipfs.cat(this.state.Hash)
-        //console.log(data ) 
-
-        fetch('https://ipfs.infura.io/ipfs/'+this.state.Hash)
+        this.setState({ hashIpfs: result[0].hash })
+       
+        fetch('http://localhost:5000/user/getcert/'+this.state.hashIpfs)
         .then(response =>  {
 
-          if(response.ok){
+          if(response.status==200) {
             
-            console.log("Ya existe el Archivo")
+            console.log(response)
            
-            //ipfs method
-              this.state.contract.methods.set("https://ipfs.infura.io/ipfs/"+this.state.Hash).send({ from: this.state.account }).then((r) => {
-                return console.log(r)
+          //ipfs method
+              this.state.contract.methods.set("https://ipfs.infura.io/ipfs/"+this.state.hashIpfs).send({ from: this.state.account }).then((r) => {
+                console.log("resulta ",r.transactionHash)
+                 
+
+              this.setState({ Hash: r.transactionHash})  
+              this.setState({
+                  user:
+                  {
+                     
+                    title:this.state.hashIpfs,
+                    hash:this.state.Hash,
+                    hashIpfs:this.state.hashIpfs
+
+                   }
+                 });  
+                 console.log("usedatacer",this.state.user)
+
+                 //se estampo el doc ahora se va a guardar en bd
+
+
+                            //this method save the title,the hash to the id user
+                            AuthService.regnewcertbyid(this.state.user).then(data=>{
+                              console.log("se insertor \n" +data)
+                               
+
+                            
+                            /* this.setState(message=message);
+                              if(!message.msgError){
+                                timerID = setTimeout(()=>{
+                                  this.props.history.push('/student-list');
+                                },8000)
+                              console.log("se añadio")
+                                }}*/
+                            }
+                            );
+
+              return console.log(r)
               })
 
             return;
-
           }
           else{
-            console.log("El Archivo no exite ...")
-            this.onSubmit()
-          }
+            console.log("El Archivo ya existe ...")
+           }
          
         })
          
@@ -144,16 +180,7 @@ class DocCert extends Component {
     }
   }
 
-//this is a method to add the file to the ipfs infura server and add to the blockchain network
-  onSubmit = (event) => {
-    event.preventDefault()
-     
-    //ipfs method
-    this.state.contract.methods.set(this.state.Hash).send({ from: this.state.account }).then((r) => {
-         return console.log(r)
-       })
-     
-  }
+ 
 
     render() {
       
